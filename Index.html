@@ -1,0 +1,240 @@
+<!DOCTYPE html><html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For My Pogo ❤️</title><style>
+
+body{
+    margin:0;
+    font-family:'Segoe UI',sans-serif;
+    background:linear-gradient(135deg,#ffd6e0,#ffeaf4);
+    text-align:center;
+    overflow:hidden;
+}
+
+/* Floating Hearts */
+.heart{
+    position:fixed;
+    color:#ff4d6d;
+    animation: float 6s linear infinite;
+    font-size:20px;
+}
+
+@keyframes float{
+    from{transform:translateY(100vh);opacity:1;}
+    to{transform:translateY(-10vh);opacity:0;}
+}
+
+#loginBox{ margin-top:150px; }
+
+.container{ display:none; margin-top:40px; }
+
+.box{
+    background:white;
+    padding:35px;
+    border-radius:20px;
+    display:inline-block;
+    box-shadow:0 10px 30px rgba(0,0,0,0.2);
+}
+
+button{
+    padding:12px 25px;
+    border:none;
+    border-radius:25px;
+    font-size:16px;
+    cursor:pointer;
+    margin:10px;
+}
+
+.yes{background:#ff4d6d;color:white;}
+.no{background:gray;color:white;}
+
+#loveMsg{ display:none; font-size:22px; color:#ff4d6d; margin-top:20px; cursor:pointer; }
+
+#countdown{ font-size:20px; color:#ff4d6d; margin-bottom:15px; }
+
+#letter{
+    display:none;
+    background:#fff0f5;
+    padding:20px;
+    border-radius:15px;
+    margin-top:20px;
+    min-height:120px;
+    white-space:pre-line;
+}
+
+/* Hidden Surprise Page */
+#surprisePage{
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:linear-gradient(135deg,#ff4d6d,#ff85a2);
+    color:white;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    padding:30px;
+    z-index:999;
+}
+
+canvas{
+    position:fixed;
+    top:0;
+    left:0;
+    pointer-events:none;
+}
+
+</style></head><body><audio autoplay loop>
+<source src="https://www.bensound.com/bensound-music/bensound-romantic.mp3">
+</audio><canvas id="fireworks"></canvas>
+
+<!-- Hidden Surprise --><div id="surprisePage">
+<h1>💖 A Promise To You 💖</h1><p style="max-width:500px;font-size:18px;">
+Pogo... If someday you feel tired, lost, or alone, always remember one thing...
+You have me. I may not be perfect, but my love for you is honest, loyal, and forever.
+
+I promise to:
+
+❤️ Respect your feelings ❤️ Stand beside you in tough times ❤️ Celebrate your happiness as mine ❤️ Protect your smile at any cost ❤️ Love you more with every passing day
+
+You are not just my girlfriend... You are my peace, my safe place, my home.
+
+— Your Bubu 🫶
+
+</p><button onclick="closeSurprise()">Back ❤️</button>
+
+</div><!-- Login --><div id="loginBox">
+<h2>Enter Password ❤️</h2>
+<input type="password" id="pass">
+<button onclick="checkPass()">Enter</button>
+</div><div class="container" id="mainContent">
+<div class="box"><h1>Happy Propose Day ❤️</h1>
+<h3>My Pogo 🥺</h3><div id="countdown"></div><p>Will you stay with me forever?</p><button class="yes" onclick="sayYes()">Yes ❤️</button> <button class="no" onmouseover="moveNo()">No 😜</button>
+
+<div id="loveMsg" onclick="openSurprise()">Yayyyyy!!! I Love You So Much 🥰 (Tap Me)</div><button onclick="startLetter()">Open Love Letter 💌</button>
+
+<div id="letter"></div></div>
+</div><script>
+
+/* Floating Hearts */
+setInterval(()=>{
+    let heart=document.createElement("div");
+    heart.className="heart";
+    heart.innerHTML="❤️";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.fontSize=(Math.random()*20+15)+"px";
+    document.body.appendChild(heart);
+    setTimeout(()=>{heart.remove();},6000);
+},400);
+
+/* Password */
+function checkPass(){
+    if(document.getElementById("pass").value === "PoGo"){
+        document.getElementById("loginBox").style.display="none";
+        document.getElementById("mainContent").style.display="block";
+    } else alert("Wrong Password 😜");
+}
+
+/* Countdown */
+let target=new Date();
+target.setHours(target.getHours()+1);
+
+setInterval(()=>{
+    let now=new Date();
+    let diff=target-now;
+    let m=Math.floor(diff/60000);
+    let s=Math.floor((diff%60000)/1000);
+
+    document.getElementById("countdown").innerHTML=
+    "Special Moment In ⏳ "+m+"m "+s+"s";
+},1000);
+
+/* YES Button */
+function sayYes(){
+    document.getElementById("loveMsg").style.display="block";
+    startFireworks();
+}
+
+/* NO Button Escape */
+function moveNo(){
+    let btn=document.querySelector(".no");
+    let x=Math.random()*300-150;
+    let y=Math.random()*300-150;
+    btn.style.transform=`translate(${x}px,${y}px)`;
+}
+
+/* Hidden Surprise */
+function openSurprise(){
+    document.getElementById("surprisePage").style.display="flex";
+}
+
+function closeSurprise(){
+    document.getElementById("surprisePage").style.display="none";
+}
+
+/* Typewriter Letter */
+let letterText=`My Dearest Pogo,\n\nYou are my happiness, my peace, and my biggest blessing.\nEvery moment with you feels magical.\nI promise to love you, protect you, and stay beside you forever ❤️\n\n— Your Bubu 😘`;
+
+let index=0;
+
+function startLetter(){
+    let letter=document.getElementById("letter");
+    letter.style.display="block";
+    letter.innerHTML="";
+    index=0;
+    typeWriter();
+}
+
+function typeWriter(){
+    if(index < letterText.length){
+        document.getElementById("letter").innerHTML += letterText.charAt(index);
+        index++;
+        setTimeout(typeWriter,40);
+    }
+}
+
+/* Fireworks */
+let canvas=document.getElementById("fireworks");
+let ctx=canvas.getContext("2d");
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+
+function startFireworks(){
+    for(let i=0;i<120;i++){
+        particles.push({
+            x:canvas.width/2,
+            y:canvas.height/2,
+            dx:(Math.random()-0.5)*8,
+            dy:(Math.random()-0.5)*8,
+            life:100
+        });
+    }
+    animate();
+}
+
+function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    particles.forEach(p=>{
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,3,0,Math.PI*2);
+        ctx.fillStyle="white";
+        ctx.fill();
+
+        p.x+=p.dx;
+        p.y+=p.dy;
+        p.life--;
+    });
+
+    particles=particles.filter(p=>p.life>0);
+
+    if(particles.length>0) requestAnimationFrame(animate);
+}
+
+</script></body>
+</html>
